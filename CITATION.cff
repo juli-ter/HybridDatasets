@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite it as below."
+title: "Hybrid Datasets for Emotion Classification: How Much Synthetic Data Is Too Much?"
+authors:
+  - family-names: Maznyk
+    given-names: Nadiia
+  - family-names: Terekhova
+    given-names: Yulia
+repository-code: "https://github.com/juli-ter/HybridDatasets"
+url: "https://github.com/juli-ter/HybridDatasets"
+version: 1.0.0
+date-released: "2026-09-22"
+keywords:
+  - emotion classification
+  - synthetic data
+  - hybrid datasets
+  - data augmentation
+  - NLP
+abstract: >
+  Code and experiments accompanying the paper "Hybrid Datasets for
+  Emotion Classification: How Much Synthetic Data Is Too Much?",
+  investigating how varying proportions of synthetic (ELSA) and real
+  (DAIR-AI) training data affect emotion classification performance
+  of a fine-tuned DistilRoBERTa-base model.
