@@ -13,16 +13,45 @@ This repository investigates how the proportion of synthetic (LLM-generated) tra
 
 Neither dataset is bundled in this repo, both are downloaded automatically via the `datasets` library when the notebook is run.
 
-## Running the experiments
+## Method
 
-Open `Hybrid_datasets.ipynbb` and run all cells top to bottom. This will:
+- **Classes:** `sadness`, `joy`, `love`, `anger`, `fear`, `surprise` (`dair-ai/emotion`'s native label set).
+- **Ratios tested:** 100% real / 75_25 / 50_50 / 25_75 / 0% real, each fixed at 10,000 training examples, stratified by label so class balance is constant across conditions.
+- **val/test sets** are built from real data only, split off *before* any ratio mixing, so evaluation always reflects real-world performance regardless of what the model was trained on.
+- **One model per ratio**, each fine-tuned from the same pretrained checkpoint (not continued from the previous ratio's weights), for 3 epochs.
+- **Evaluation:** overall accuracy/macro-F1, per-emotion recall, and paired significance testing across ratios on the same test set.
 
-1. Load DAIR-AI and ELSA, and split the real data into training/validation/test sets (stratified, `random_state=42`).
-2. Build five hybrid training sets of 10,000 samples each, at real/synthetic ratios of 100/0, 75/25, 50/50, 25/75, and 0/100.
-3. Fine-tune DistilRoBERTa-base on each mixture (5 runs per condition) and evaluate on the real-only test set.
-4. Reproduce the tables and figures reported in the paper.
 
-Random seeds are fixed for data sampling and splitting; results may vary slightly between runs due to non-determinism in model training.
+## Project structure
+
+```
+Hybrid_datasets.ipynb   # full pipeline: data loading -> mixing -> training -> stats -> figures
+```
+
+## Requirements
+
+```
+transformers
+datasets
+torch
+scikit-learn
+statsmodels
+pandas
+numpy
+matplotlib
+```
+
+## Running
+
+Designed for Google Colab with a GPU runtime (uses `distilroberta-base` fine-tuning, ~3 epochs per ratio, 5 ratios total). Run top to bottom; later cells depend on variables defined earlier (`real_train_pool`, `label2id`, `mixed_datasets`, etc.), so partial/out-of-order execution can raise `NameError`s or silently reuse stale data.
+
+
+## Known limitations
+
+- Single random seed per ratio condition; no estimate of run-to-run variance.
+- Single model architecture (`distilroberta-base`) and fixed hyperparameters; not swept.
+- Synthetic data from one generator (ELSA) only.
+- Rare classes (`surprise`, `love`) have limited test-set support, so per-emotion significance tests have low power to detect small effect.
 
 ## Citation
 
